@@ -31,42 +31,27 @@ ui <- page_fluid(
   navlistPanel(
     widths = c(3, 9),   # left tabs width, right content width
     # --- Demography ---
+    
     tabPanel("Demography",
-             fluidRow(
-               column(12,
-                      fluidRow(
-                        column(3, selectInput("sex", "Sex", choices = c("All", 'M','F'), selected = "ALL")),
-                      ),
-                      DTOutput("tbl_demog")
-               )
+                      tabsetPanel(
+                        tabPanel( "Demo",
+                        selectInput("sex", "Sex", choices = c("All", 'M','F'), selected = "ALL"),
+                        DTOutput("tbl_demog")
+               ),
+               tabPanel( "Adverse events",
+                         selectInput("ae_ser", "Serious (AESER)", choices = c("All", "Y","N"), selected = "All"),
+                        selectInput("ae_sev", "Severity (AESEV)", choices = c("All", "Mild","Moderate","Severe"), selected = "All"),
+                       selectInput("ae_arm", "Arm", choices = c("All", sort(unique(adsl$arm))), selected = "All"),
+                         DTOutput("tbl_adae")
+             ),
+             tabPanel( "Laboratory",
+                       selectInput("lab_param", "Parameter", choices = sort(unique(adlbc$param)), selected = "ALT"),
+                       selectInput("lab_visit", "Visit", choices = sort(unique(adlbc$VISIT)), selected = "Visit 1"),
+                       DTOutput("tbl_adlb")
              )
-    ),
-    # --- Adverse Events ---
-    tabPanel("Adverse",
-             fluidRow(
-               column(12,
-                      fluidRow(
-                        column(3, selectInput("ae_ser", "Serious (AESER)", choices = c("All", "Y","N"), selected = "All")),
-                        column(3, selectInput("ae_sev", "Severity (AESEV)", choices = c("All", "Mild","Moderate","Severe"), selected = "All")),
-                        column(3, selectInput("ae_arm", "Arm", choices = c("All", sort(unique(adsl$arm))), selected = "All"))
-                      ),
-                      DTOutput("tbl_adae")
-               )
-             )
-    ),
-    # --- Labs ---
-    tabPanel("Lab",
-             fluidRow(
-               column(12,
-                      fluidRow(
-                        column(3, selectInput("lab_param", "Parameter", choices = sort(unique(adlbc$param)), selected = "ALT")),
-                        column(3, selectInput("lab_visit", "Visit", choices = sort(unique(adlbc$VISIT)), selected = "Visit 1")),
-                        column(3, selectInput("lab_arm", "Arm", choices = c("All", sort(unique(adsl$arm))), selected = "All"))
-                      ),
-                      DTOutput("tbl_adlb")
-               )
-             )
-    ),
+             
+    )),
+
     # --- Other Analysis (placeholder) ---
     tabPanel("Other Analysis",
              fluidRow(
